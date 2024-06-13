@@ -17,18 +17,35 @@ class SocialAuthController extends Controller
 
     public function handleProviderCallback($provider)
     {
-        $socialUser = Socialite::driver($provider)->stateless()->user();
+        try {
+            $socialUser = Socialite::driver($provider)->user();
+        } catch (\Exception $e) {
+            \Log::error('Socialite error: ' . $e->getMessage());
+            return redirect('/login')->with('error', 'Error authenticating with ' . ucfirst($provider));
+        }
 
-        $user = User::firstOrCreate([
-            'email' => $socialUser->getEmail(),
-        ], [
-            'name' => $socialUser->getName(),
-            'password' => Hash::make(uniqid()),
-        ]);
+        \Log::info('Social User: ', ['id' => $socialUser->getId(), 'email' => $socialUser->getEmail()]);
 
+        // Check if the user already exists in your database
+        $user = User::where('email', $socialUser->getEmail())->first();
+
+        if (!$user) {
+            // Create a new user if not exists
+            $user = User::create([
+                'name' => $socialUser->getName(),
+                'email' => $socialUser->getEmail(),
+                'password' => Hash::make(uniqid()), // You may not need to set a password if using social login
+            ]);
+            \Log::info('User created: ', ['id' => $user->id, 'email' => $user->email]);
+        } else {
+            \Log::info('User exists: ', ['id' => $user->id, 'email' => $user->email]);
+        }
+
+        // Log the user into the application
         Auth::login($user, true);
 
         return redirect()->route('dashboard');
     }
+
 }
 
