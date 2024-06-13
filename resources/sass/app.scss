@@ -1,0 +1,51 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+
+
+$primary-color: #2d9646;
+$secondary-color: #176ea7;
+
+
+body {
+    background-color: rgb(242, 242, 242);
+    color: #333;
+}
+
+.bg-custom {
+    --bs-bg-opacity: 1;
+    background-color: #2d9646 !important;
+}
+
+.nav-link {
+    color: rgb(255 255 255);
+}
+
+.navbar-brand img {
+    width: 80%;
+}
+
+.btn-google {
+    background-color: #176ea7;
+    width: 25%;
+}
+
+.btn-github {
+    background-color: #7c8992;
+    width: 25%;
+}
+
+.btn-google:hover, .btn-github:hover {
+    background-color: $primary-color;
+    opacity: 0.9;
+}
+
+.card-header {
+    font-weight: 800;
+}
