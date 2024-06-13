@@ -17,14 +17,22 @@ class SocialAuthController extends Controller
 
     public function handleProviderCallback($provider)
     {
+
         try {
             $socialUser = Socialite::driver($provider)->user();
+            if($socialUser->name == null){
+                $socialUser->name = $socialUser->nickname;
+            }
         } catch (\Exception $e) {
             \Log::error('Socialite error: ' . $e->getMessage());
             return redirect('/login')->with('error', 'Error authenticating with ' . ucfirst($provider));
         }
 
-        \Log::info('Social User: ', ['id' => $socialUser->getId(), 'email' => $socialUser->getEmail()]);
+        \Log::info('Social User: ', [
+            'id' => $socialUser->getId(),
+            'email' => $socialUser->getEmail(),
+            'name' => $socialUser->getName(),
+        ]);
 
         // Check if the user already exists in your database
         $user = User::where('email', $socialUser->getEmail())->first();
@@ -32,7 +40,7 @@ class SocialAuthController extends Controller
         if (!$user) {
             // Create a new user if not exists
             $user = User::create([
-                'name' => $socialUser->getName(),
+                'name' => $socialUser->getName() ?? 'Default Name', // Set a default name if null
                 'email' => $socialUser->getEmail(),
                 'password' => Hash::make(uniqid()), // You may not need to set a password if using social login
             ]);
@@ -46,6 +54,6 @@ class SocialAuthController extends Controller
 
         return redirect()->route('dashboard');
     }
-
 }
+
 

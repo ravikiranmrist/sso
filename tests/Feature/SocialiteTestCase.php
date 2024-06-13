@@ -53,7 +53,5 @@ class SocialiteTestCase extends TestCase
         $user = User::where('email', $email)->first();
         $this->assertNotNull($user); // Check if the user was created
         $this->assertAuthenticatedAs($user); // Check if the user is authenticated
-
-        dd($user);
     }
 }
