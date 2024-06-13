@@ -97,13 +97,5 @@ This application supports login via Google and GitHub. To use social login, ensu
 2. Register a new OAuth application.
 3. Set the callback URL to `http://your-domain.com/login/github/callback`.
 
-## Additional Commands
-
-**To run tests:**
-
-```sh
-php artisan test
-
-
 
 This README file should help users set up and run your Laravel and Vue.js application with social authentication. Make sure to replace placeholders like `your_database`, `your_username`, `your_password`, `your-google-client-id`, `your-google-client-secret`, `your-callback-url`, `your-github-client-id`, and `your-github-client-secret` with the actual values.
